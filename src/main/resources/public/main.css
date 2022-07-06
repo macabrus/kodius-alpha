@@ -1,0 +1,54 @@
+body {
+    background: #E5E5E5;
+    font-family: Poppins;
+}
+
+label {
+    font-weight: 400;
+    line-height: 15px;
+    display:block;
+    clear:both;
+    letter-spacing: -0.02em;
+    color: #737373;
+}
+
+.dbg {
+    border: 1px solid red;
+}
+
+.muted {
+    color: #737373;
+}
+
+.thin {
+    font-weight: 600;
+}
+
+input {
+    border: 1px solid #D0D0D0;
+    border-radius: 8px;
+    background: #E5E5E5;
+    font-family: inherit;
+    padding: 10px;
+}
+
+button {
+    font-family: inherit;
+    color: white;
+    font-weight: bold;
+    background: #836048;
+    border-radius: 12px;
+    border: none;
+    padding: 10px;
+    width: 100%;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.mega {
+    font-weight: bold;
+    font-size: 70px;
+    color: white;
+}
