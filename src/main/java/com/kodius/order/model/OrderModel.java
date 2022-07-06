@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 import java.time.Instant;
 
 @Value.Immutable
-public interface Order {
+public interface OrderModel {
     Integer id();
     Instant serviceDate();
     String model();

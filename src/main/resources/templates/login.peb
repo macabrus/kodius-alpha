@@ -2,7 +2,7 @@
 {% block main %}
 <div style="display: flex; flex-direction: row">
     <div>
-        <h1><img src="/logo.svg"> alpha</h1>
+        <h1><img src="/public/logo.svg"> alpha</h1>
         <h2 class="muted thin">welcome to</h2>
         <h1 class="thin">alpha service</h1>
         <form action="/login" method="POST">
@@ -12,7 +12,7 @@
         </form>
     </div>
     <div>
-        <img src="/login_img.png">
+        <img src="/public/login_img.png">
         <h1 class="mega">Alpha Service</h1>
     </div>
 </div>

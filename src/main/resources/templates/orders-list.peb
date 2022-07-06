@@ -1,0 +1,6 @@
+{% extends "./orders-base.peb" %}
+{% block main %}
+<h1><img src="/public/logo.svg"> alpha</h1>
+<p>order listing </p>
+
+{% endblock %}
