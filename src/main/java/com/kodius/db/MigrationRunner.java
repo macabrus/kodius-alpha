@@ -27,12 +27,6 @@ public class MigrationRunner {
         this.db = db;
     }
 
-    public static void main(String[] args) throws Exception {
-        Jdbi db = Jdbi.create("jdbc:postgresql://postgres:5432/kodius","kodius", "kodius");
-        MigrationRunner runner = new MigrationRunner(db);
-        runner.migrate(Strategy.LATEST);
-    }
-
     private void ensureMigrationTable(Handle h) {
         log.debug("Ensuring migration tables");
         h.useTransaction(txn -> {

@@ -40,11 +40,11 @@ public class Main {
             }
         );
 
-        /* Running DOWN/UP migrations in database */
+        /* Running migrations in database */
         var runner = di.getInstance(MigrationRunner.class);
         runner.migrate(Strategy.LATEST);
 
-        /* Embeded Jetty */
+        /* Embedded Jetty under the hood */
         var app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson(di.getInstance(ObjectMapper.class)));
             config.addStaticFiles(conf -> {
