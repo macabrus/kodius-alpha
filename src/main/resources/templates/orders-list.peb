@@ -1,6 +1,42 @@
 {% extends "./orders-base.peb" %}
-{% block main %}
-<h1><img src="/public/logo.svg"> alpha</h1>
-<p>order listing </p>
 
+{% block left %}
+<div>
+<button onclick="location.href='/orders/new'">Create New Order</button>
+<table class="" style="width: 100%">
+    <thead>
+        <tr>
+            <td>Order ID</td>
+            <td>Service Date</td>
+            <td>Model</td>
+            <td>Mileage</td>
+            <td>Progress</td>
+            <td></td>
+        <tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.serviceDate }}</td>
+            <td>{{ o.model }}</td>
+            <td>{{ o.mileage }}</td>
+            <td>{{ o.progress }}</td>
+            <td><a href="/orders/{{ o.id }}">Description</a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block right %}
+    <img src="/public/thank_you.png">
 {% endblock %}

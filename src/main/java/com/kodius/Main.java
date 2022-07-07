@@ -6,6 +6,8 @@ import com.google.inject.Guice;
 import com.kodius.db.DatabaseModule;
 import com.kodius.db.MigrationRunner;
 import com.kodius.db.Strategy;
+import com.kodius.order.OrderService;
+import com.kodius.order.model.OrderForm;
 import com.kodius.user.UserDAO;
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -13,6 +15,8 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
 import org.jdbi.v3.core.Jdbi;
+
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -70,16 +74,37 @@ public class Main {
         });
 
         app.get("/orders", ctx -> {
-            ctx.render("templates/orders-list.peb");
+            Integer userId = ctx.sessionAttribute("userId");
+            var orders = di.getInstance(OrderService.class);
+            ctx.render("templates/orders-list.peb", Map.of("orders", orders.getOrdersForUser(userId)));
         });
 
         app.get("/orders/new", ctx -> {
-            ctx.render("templates/orders-form.peb");
+            var orders = di.getInstance(OrderService.class);
+            var serviceTuples = orders.getAvailableServices();
+            var brands = orders.getSupportedBrands(serviceTuples);
+            var models = orders.getSupportedModels(serviceTuples);
+            ctx.render("templates/orders-form.peb", Map.of("brands", brands, "models", models));
         });
 
         // posting new order
         app.post("/orders", ctx -> {
-            // validate and save to db
+            /* Basic data format validation on controller level */
+            var dto = OrderForm.builder().brand(ctx.formParamAsClass("brand", String.class).get())
+                .model(ctx.formParamAsClass("model", String.class).get())
+                .year(ctx.formParamAsClass("year", Integer.class).get())
+                .mileage(ctx.formParamAsClass("mileage", Integer.class).get())
+                .changeChain(ctx.formParamAsClass("changeChain", Boolean.class).getOrDefault(false))
+                .changeOilAndOilFilter(ctx.formParamAsClass("changeOilAndOilFilter", Boolean.class).getOrDefault(false))
+                .changeAirFilter(ctx.formParamAsClass("changeAirFilter", Boolean.class).getOrDefault(false))
+                .changeBrakeFluid(ctx.formParamAsClass("changeBrakeFluid", Boolean.class).getOrDefault(false))
+                .build();
+            System.out.println(dto);
+            var orders = di.getInstance(OrderService.class);
+            orders.placeOrder(dto);
+
+            // put flash message to thank for order...
+            ctx.redirect("/orders");
         });
 
         app.start(7000);

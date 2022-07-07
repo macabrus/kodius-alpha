@@ -10,4 +10,5 @@ public interface OrderModel {
     Instant serviceDate();
     String model();
     Integer mileage();
+    String progress();
 }

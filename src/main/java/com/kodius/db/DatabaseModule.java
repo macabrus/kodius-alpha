@@ -4,9 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provides;
+import com.kodius.order.model.MotorcycleService;
+import com.kodius.order.model.MotorcycleServiceModel;
+import com.kodius.order.model.Order;
+import com.kodius.order.model.OrderModel;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.immutables.JdbiImmutables;
 import org.jdbi.v3.core.statement.Slf4JSqlLogger;
 import org.jdbi.v3.jackson2.Jackson2Config;
 import org.jdbi.v3.jackson2.Jackson2Plugin;
@@ -29,6 +34,9 @@ public class DatabaseModule implements Module {
             .installPlugin(new Jackson2Plugin());
         jdbi.getConfig(Jackson2Config.class)
             .setMapper(mapper);
+        jdbi.getConfig(JdbiImmutables.class)
+            .registerImmutable(OrderModel.class, Order.class, Order::builder)
+            .registerImmutable(MotorcycleServiceModel.class, MotorcycleService.class, MotorcycleService::builder);
         jdbi.setSqlLogger(new Slf4JSqlLogger());
         return jdbi;
     }

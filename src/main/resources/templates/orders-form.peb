@@ -1,6 +1,40 @@
 {% extends "./orders-base.peb" %}
-{% block main %}
-<h1><img src="/public/logo.svg"> alpha</h1>
+{% block left %}
 <p>new order form </p>
+<form action="/orders" method="POST">
 
+<label for="brand">Select a brand:</label>
+<select id="brand" name="brand">
+    <option disabled selected value> -- select an option -- </option>
+    {% for brand in brands %}
+      <option value="{{ brand }}">{{ brand }}</option>
+    {% endfor %}
+</select>
+
+<label for="model">Select a model:</label>
+<select id="model" name="model">
+    <option disabled selected value> -- select an option -- </option>
+    {% for model in models %}
+      <option value="{{ model }}">{{ model }}</option>
+    {% endfor %}
+</select>
+
+<input name="year" placeholder="Enter year...">
+<input name="mileage" placeholder="Enter Mileage...">
+<input name="mileage" placeholder="Choose Date"> <br>
+
+<input type="checkbox" id="changeChain" name="changeChain" value="true">
+<label for="changeChain">Chain Change</label><br>
+<input type="checkbox" id="changeOilAndOilFilter" name="changeOilAndOilFilter" value="true">
+<label for="changeOilAndOilFilter">Oil and Oil Filter Change</label><br>
+<input type="checkbox" id="changeAirFilter" name="changeAirFilter" value="true">
+<label for="changeAirFilter">Air Filter Change</label><br>
+<input type="checkbox" id="changeBrakeFluid" name="changeBrakeFluid" value="true">
+<label for="changeBrakeFluid">Brake Fluid Change</label><br>
+
+<button type="submit">Create Order</button>
+</form>
+{% endblock %}
+{% block right %}
+    <img src="/public/orders_list_img.png">
 {% endblock %}

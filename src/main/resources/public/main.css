@@ -24,7 +24,7 @@ label {
     font-weight: 600;
 }
 
-input {
+input, select {
     border: 1px solid #D0D0D0;
     border-radius: 8px;
     background: #E5E5E5;
@@ -51,4 +51,65 @@ button:hover {
     font-weight: bold;
     font-size: 70px;
     color: white;
+}
+
+.column {
+    float: left;
+    width: 48%;
+}
+
+img {
+    padding: 0;
+    margin: 0;
+}
+
+.framed {
+    padding: 0;
+    border: 2px solid #D0D0D0;
+    border-radius: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+table {
+    font-weight: lighter;
+    font-size: 20px;
+    color: #737373;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+tbody tr:nth-child(odd) td {
+    background: #D0D0D0;
+    border: none;
+    /*border-style: none solid solid none;*/
+    padding: 10px;
+}
+
+tbody tr:nth-child(odd) td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+tbody tr:nth-child(odd) td:nth-last-child(2) {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+tbody tr:nth-child(odd) td:last-child {
+    background: #E5E5E5;
+}
+
+
+
+tbody tr:nth-child(even) td {
+    padding: 10px;
+    background: #E5E5E5;
 }

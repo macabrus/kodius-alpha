@@ -1,5 +1,13 @@
 {% extends "./base.peb" %}
 {% block main %}
 <h1><img src="/public/logo.svg"> alpha</h1>
-
+{# Left side is bigger, using flexbox #}
+<div class="row">
+<div class="column">
+{% block left %}{% endblock %}
+</div>
+<div class="column framed">
+{% block right %}{% endblock %}
+</div>
+</div>
 {% endblock %}
