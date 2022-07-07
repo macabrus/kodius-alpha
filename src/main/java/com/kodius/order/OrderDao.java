@@ -4,7 +4,6 @@ import com.kodius.order.model.Order;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
