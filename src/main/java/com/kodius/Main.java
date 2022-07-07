@@ -35,7 +35,8 @@ public class Main {
             }
         );
         var runner = di.getInstance(MigrationRunner.class);
-        runner.migrate(Strategy.RESET_TO_LATEST);
+
+        runner.migrate(Strategy.LATEST);
 
         var app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson(di.getInstance(ObjectMapper.class)));
@@ -104,7 +105,8 @@ public class Main {
         // posting new order
         app.post("/orders", ctx -> {
             /* Basic data format validation on controller level */
-            var dto = OrderForm.builder().brand(ctx.formParamAsClass("brand", String.class).get())
+            var dto = OrderForm.builder()
+                .brand(ctx.formParamAsClass("brand", String.class).get())
                 .model(ctx.formParamAsClass("model", String.class).get())
                 .year(ctx.formParamAsClass("year", Integer.class).get())
                 .mileage(ctx.formParamAsClass("mileage", Integer.class).get())

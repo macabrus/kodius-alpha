@@ -141,6 +141,7 @@ public class V0001_Initial implements Migration {
     private void addUsers(Handle db) {
         var batch = db.prepareBatch("INSERT INTO app_user(email) VALUES (?)");
         batch.add("bernard.crnkovic@icloud.com");
+        batch.add("kodius@kodius.com");
         batch.execute();
     }
 }
