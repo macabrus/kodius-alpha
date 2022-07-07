@@ -96,7 +96,12 @@ public class Main {
         app.get("/orders", ctx -> {
             Integer userId = ctx.sessionAttribute("userId");
             var orders = di.getInstance(OrderService.class);
-            ctx.render("templates/orders-list.peb", Map.of("orders", orders.getOrdersForUser(userId)));
+            var flash = ctx.sessionAttribute("flash");
+            ctx.sessionAttribute("flash", null);
+            ctx.render("templates/orders-list.peb", Map.of(
+                "flash", flash == null ? "" : flash,
+                "orders", orders.getOrdersForUser(userId))
+            );
         });
 
         app.get("/orders/new", ctx -> {
@@ -123,9 +128,8 @@ public class Main {
                 .build();
             System.out.println(dto);
             var orders = di.getInstance(OrderService.class);
-            orders.placeOrder(ctx.sessionAttribute("userId"), dto);
-
-            // put flash message to thank for order...
+            var order = orders.placeOrder(ctx.sessionAttribute("userId"), dto);
+            ctx.sessionAttribute("flash", "Thank you for your order: #" + order.id());
             ctx.redirect("/orders");
         });
 

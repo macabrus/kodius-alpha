@@ -1,13 +1,14 @@
 {% extends "./base.peb" %}
 {% block main %}
-<h1><img src="/public/logo.svg"> alpha</h1>
 {# Left side is bigger, using flexbox #}
-<div class="row">
-<div class="column">
-{% block left %}{% endblock %}
-</div>
-<div class="column framed">
-{% block right %}{% endblock %}
-</div>
+<div style="display: flex; flex-direction: row;">
+    <div style="flex-grow: 0.6">
+        {% block left %}{% endblock %}
+    </div>
+    <div style="flex-grow: 0.4">
+        <div class="framed">
+            {% block right %}{% endblock %}
+        </div>
+    </div>
 </div>
 {% endblock %}

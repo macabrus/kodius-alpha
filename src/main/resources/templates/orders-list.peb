@@ -1,42 +1,57 @@
-{% extends "./orders-base.peb" %}
+{% extends "./base.peb" %}
 
-{% block left %}
-<div>
-<button onclick="location.href='/orders/new'">Create New Order</button>
-<table class="" style="width: 100%">
-    <thead>
-        <tr>
-            <td>Order ID</td>
-            <td>Service Date</td>
-            <td>Model</td>
-            <td>Mileage</td>
-            <td>Progress</td>
-            <td></td>
-        <tr>
-    </thead>
-    <tbody>
-        {% for o in orders %}
-        <tr>
-            <td>{{ o.id }}</td>
-            <td>{{ o.serviceDate }}</td>
-            <td>{{ o.model }}</td>
-            <td>{{ o.mileage }}</td>
-            <td>{{ o.progress }}</td>
-            <td><a href="/orders/{{ o.id }}">Description</a></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{%block main%}
+<div style="display: flex; flex-direction: row;">
+    <div style="flex-grow: 0.6; padding: 100px">
+        <div style="display: flex; flex-direction: row; justify-content: space-between">
+            <h1><img src="/public/logo.svg"> alpha</h1>
+            <div>
+                <button onclick="location.href='/orders/new'">Create New Order</button>
+            </div>
+        </div>
+        {% if orders is not empty %}
+        <table class="" style="width: 100%">
+            <thead>
+                <tr>
+                    <td>Order ID</td>
+                    <td>Service Date</td>
+                    <td>Model</td>
+                    <td>Mileage</td>
+                    <td>Progress</td>
+                    <td></td>
+                <tr>
+            </thead>
+            <tbody>
+                {% for o in orders %}
+                <tr>
+                    <td>{{ o.id }}</td>
+                    <td>{{ o.serviceDate }}</td>
+                    <td>{{ o.model }}</td>
+                    <td>{{ o.mileage }}</td>
+                    <td>{{ o.progress }}</td>
+                    <td><a href="/orders/{{ o.id }}">Description</a></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Nothing to show!</p>
+        {% endif %}
+    </div>
+    <div style="flex-grow: 0.4">
+        {% if flash is not empty %}
+            <div class="framed">
+                <h1>{{ flash }}</h1>
+                <img src="/public/thank_you.png">
+            </div>
+        {% endif %}
+    </div>
 </div>
-{% endblock %}
-
-{% block right %}
-    <img src="/public/thank_you.png">
-{% endblock %}
+{%endblock %}

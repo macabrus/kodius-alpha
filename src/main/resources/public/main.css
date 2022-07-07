@@ -53,11 +53,6 @@ button:hover {
     color: white;
 }
 
-.column {
-    float: left;
-    width: 48%;
-}
-
 img {
     padding: 0;
     margin: 0;
@@ -76,6 +71,9 @@ img {
     clear: both;
 }
 
+a {
+    color: #836048;
+}
 table {
     font-weight: lighter;
     font-size: 20px;
@@ -107,7 +105,13 @@ tbody tr:nth-child(odd) td:last-child {
     background: #E5E5E5;
 }
 
+.w-100 {
+    width: 100%;
+}
 
+.w-50 {
+    width: 50%;
+}
 
 tbody tr:nth-child(even) td {
     padding: 10px;

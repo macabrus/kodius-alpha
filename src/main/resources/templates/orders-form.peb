@@ -5,49 +5,69 @@
   href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
 {% endblock %}
 
-{% block left %}
-<p>new order form </p>
-<form action="/orders" method="POST">
+{% block main %}
+    <div style="display: flex; flex-direction: row;">
+        <div style="flex-grow: 3; padding: 100px">
+            <h1><img src="/public/logo.svg"> alpha</h1>
+            <p>new order form </p>
 
-<label for="brand">Select a brand:</label>
-<select id="brand" name="brand">
-    <option disabled selected value> -- select an option -- </option>
-    {% for brand in brands %}
-      <option value="{{ brand }}">{{ brand }}</option>
-    {% endfor %}
-</select>
+            <form action="/orders" method="POST">
+            <div style="display: flex; flex-direction: row;">
+                <div>
 
-<label for="model">Select a model:</label>
-<select id="model" name="model">
-    <option disabled selected value> -- select an option -- </option>
-    {% for model in models %}
-      <option value="{{ model }}">{{ model }}</option>
-    {% endfor %}
-</select>
+                    <label for="brand">Select a brand:</label>
+                    <select id="brand" name="brand">
+                        <option disabled selected value> -- select an option -- </option>
+                        {% for brand in brands %}
+                          <option value="{{ brand }}">{{ brand }}</option>
+                        {% endfor %}
+                    </select>
 
-<label for="year">Model Year:</label>
-<input name="year" placeholder="Enter year...">
-<label for="mileage">Mileage:</label>
-<input name="mileage" placeholder="Enter Mileage...">
-<label for="date">Choose Date:</label>
-<input name="date" placeholder="Choose Date"> <br>
+                    <label for="model">Select a model:</label>
+                    <select id="model" name="model">
+                        <option disabled selected value> -- select an option -- </option>
+                        {% for model in models %}
+                          <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
 
-<input type="checkbox" id="changeChain" name="changeChain">
-<label for="changeChain">Chain Change</label><br>
-<input type="checkbox" id="changeOilAndOilFilter" name="changeOilAndOilFilter">
-<label for="changeOilAndOilFilter">Oil and Oil Filter Change</label><br>
-<input type="checkbox" id="changeAirFilter" name="changeAirFilter">
-<label for="changeAirFilter">Air Filter Change</label><br>
-<input type="checkbox" id="changeBrakeFluid" name="changeBrakeFluid">
-<label for="changeBrakeFluid">Brake Fluid Change</label><br>
+                    <label for="year">Model Year:</label>
+                    <input name="year" placeholder="Enter year...">
+                    <label for="mileage">Mileage:</label>
+                    <input name="mileage" placeholder="Enter Mileage...">
+                </div>
+                <div>
+                    <label for="date">Choose Date:</label>
+                    <input name="date" placeholder="Choose Date"> <br>
 
-<button type="submit">Create Order</button>
-</form>
-{% endblock %}
-{% block right %}
-    <h2>Order Summary</h2>
-    <h3>Price with discounts: <span id="total-price"></span></h3>
-{% endblock %}
+                    <label for="changeChain">
+                        <input type="checkbox" id="changeChain" name="changeChain">Chain Change
+                    </label>
+                    <label for="changeOilAndOilFilter">
+                        <input type="checkbox" id="changeOilAndOilFilter" name="changeOilAndOilFilter">Oil and Oil Filter Change
+                    </label>
+                    <label for="changeAirFilter">
+                        <input type="checkbox" id="changeAirFilter" name="changeAirFilter">Air Filter Change
+                    </label>
+                    <label for="changeBrakeFluid">
+                        <input type="checkbox" id="changeBrakeFluid" name="changeBrakeFluid">Brake Fluid Change
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit">Create Order</button>
+            </form>
+        </div>
+
+
+
+        <div style="flex-grow: 1">
+            <h2>Order Summary</h2>
+            <h3>Price with discounts: <span id="total-price"></span></h3>
+        </div>
+    </div>
+{%endblock%}
+
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
 <script>
