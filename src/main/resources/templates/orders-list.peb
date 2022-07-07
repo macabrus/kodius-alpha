@@ -45,7 +45,7 @@
             <p>Nothing to show!</p>
         {% endif %}
     </div>
-    <div style="flex-grow: 0.4">
+    <div style="flex-grow: 0.4; margin: 100px">
         {% if flash is not empty %}
             <div class="framed">
                 <h1>{{ flash }}</h1>

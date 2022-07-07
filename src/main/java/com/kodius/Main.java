@@ -39,10 +39,12 @@ public class Main {
                     .toInstance(mapper);
             }
         );
-        var runner = di.getInstance(MigrationRunner.class);
 
+        /* Running DOWN/UP migrations in database */
+        var runner = di.getInstance(MigrationRunner.class);
         runner.migrate(Strategy.LATEST);
 
+        /* Embeded Jetty */
         var app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson(di.getInstance(ObjectMapper.class)));
             config.addStaticFiles(conf -> {
@@ -60,6 +62,7 @@ public class Main {
             return LocalDate.parse(v, fmt);
         });
 
+        /* REST handlers */
         app.before(ctx -> {
             String url = ctx.path();
             if (url.startsWith("/public/")) {
@@ -112,7 +115,7 @@ public class Main {
             ctx.render("templates/orders-form.peb", Map.of("brands", brands, "models", models));
         });
 
-        // posting new order
+        /* Order form handler */
         app.post("/orders", ctx -> {
             /* Basic data format validation on controller level */
             var dto = OrderForm.builder()
@@ -133,7 +136,7 @@ public class Main {
             ctx.redirect("/orders");
         });
 
-        // handle live updates for computing form price
+        /* websocket endpoint for handling live updates for computing form price with */
         app.ws("/compute-price", ws -> {
             ws.onMessage(ctx -> {
                 var orders = di.getInstance(OrderService.class);
