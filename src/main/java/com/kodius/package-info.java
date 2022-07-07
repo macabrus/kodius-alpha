@@ -1,4 +1,4 @@
 @ModelStyle
 package com.kodius;
 
-import com.kodius.common.ModelStyle;
+import com.kodius.util.ModelStyle;

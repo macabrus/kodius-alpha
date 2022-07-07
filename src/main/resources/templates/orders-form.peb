@@ -32,13 +32,13 @@
 <label for="date">Choose Date:</label>
 <input name="date" placeholder="Choose Date"> <br>
 
-<input type="checkbox" id="changeChain" name="changeChain" value="true">
+<input type="checkbox" id="changeChain" name="changeChain">
 <label for="changeChain">Chain Change</label><br>
-<input type="checkbox" id="changeOilAndOilFilter" name="changeOilAndOilFilter" value="true">
+<input type="checkbox" id="changeOilAndOilFilter" name="changeOilAndOilFilter">
 <label for="changeOilAndOilFilter">Oil and Oil Filter Change</label><br>
-<input type="checkbox" id="changeAirFilter" name="changeAirFilter" value="true">
+<input type="checkbox" id="changeAirFilter" name="changeAirFilter">
 <label for="changeAirFilter">Air Filter Change</label><br>
-<input type="checkbox" id="changeBrakeFluid" name="changeBrakeFluid" value="true">
+<input type="checkbox" id="changeBrakeFluid" name="changeBrakeFluid">
 <label for="changeBrakeFluid">Brake Fluid Change</label><br>
 
 <button type="submit">Create Order</button>
@@ -53,6 +53,9 @@
     const elem = document.querySelector('input[name="date"]');
     const datepicker = new Datepicker(elem);
 </script>
-{% endblock %}
 
-<script></script>
+<script src="/public/reactive-form.js"></script>
+<script>
+    document.querySelector('form').addEventListener('change', debounce(() => updatePrice()));
+</script>
+{% endblock %}

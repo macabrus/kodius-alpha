@@ -1,4 +1,4 @@
-package com.kodius.common;
+package com.kodius.util;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

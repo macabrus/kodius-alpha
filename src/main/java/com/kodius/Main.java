@@ -2,13 +2,15 @@ package com.kodius;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Guice;
 import com.kodius.db.DatabaseModule;
 import com.kodius.db.MigrationRunner;
 import com.kodius.db.Strategy;
 import com.kodius.order.OrderService;
 import com.kodius.order.model.OrderForm;
-import com.kodius.user.UserDAO;
+import com.kodius.user.UserDao;
 import io.javalin.Javalin;
 import io.javalin.core.validation.JavalinValidation;
 import io.javalin.http.BadRequestResponse;
@@ -17,8 +19,7 @@ import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
 import org.jdbi.v3.core.Jdbi;
 
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -32,6 +33,10 @@ public class Main {
             binder -> {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+                mapper.registerModule(new Jdk8Module()); // for optionals
+                mapper.registerModule(new JavaTimeModule());
+                binder.bind(ObjectMapper.class)
+                    .toInstance(mapper);
             }
         );
         var runner = di.getInstance(MigrationRunner.class);
@@ -46,13 +51,13 @@ public class Main {
                 conf.location = Location.CLASSPATH;
             });
         });
-        JavalinValidation.register(Instant.class, v -> {
+
+        JavalinValidation.register(LocalDate.class, v -> {
             DateTimeFormatter fmt = new DateTimeFormatterBuilder()
                 .appendPattern("MM/dd/yyyy")
                 .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
-                .toFormatter()
-                .withZone(ZoneId.systemDefault());
-            return fmt.parse(v, Instant::from);
+                .toFormatter();
+            return LocalDate.parse(v, fmt);
         });
 
         app.before(ctx -> {
@@ -77,7 +82,7 @@ public class Main {
             if (!email.hasValue()) {
                 throw new BadRequestResponse();
             }
-            var id = db.withExtension(UserDAO.class, dao ->
+            var id = db.withExtension(UserDao.class, dao ->
                 dao.find(email.get())
             );
             System.out.println("Found user of id " + id);
@@ -110,7 +115,7 @@ public class Main {
                 .model(ctx.formParamAsClass("model", String.class).get())
                 .year(ctx.formParamAsClass("year", Integer.class).get())
                 .mileage(ctx.formParamAsClass("mileage", Integer.class).get())
-                .date(ctx.formParamAsClass("date", Instant.class).get())
+                .date(ctx.formParamAsClass("date", LocalDate.class).get())
                 .changeChain(ctx.formParamAsClass("changeChain", Boolean.class).getOrDefault(false))
                 .changeOilAndOilFilter(ctx.formParamAsClass("changeOilAndOilFilter", Boolean.class).getOrDefault(false))
                 .changeAirFilter(ctx.formParamAsClass("changeAirFilter", Boolean.class).getOrDefault(false))
@@ -128,8 +133,12 @@ public class Main {
         app.ws("/compute-price", ws -> {
             ws.onMessage(ctx -> {
                 var orders = di.getInstance(OrderService.class);
-                var maybePricing = orders.findPricing(ctx.messageAsClass(OrderForm.class));
-                maybePricing.ifPresent(pricing -> ctx.send(maybePricing));
+                var form = di.getInstance(ObjectMapper.class)
+                    .readValue(ctx.message(), OrderForm.class);
+                System.out.println(form);
+                var maybePricing = orders.findPricing(form);
+                maybePricing.ifPresent(System.out::println);
+                maybePricing.ifPresent(pricing -> ctx.send(Map.of("base", maybePricing, "discounted", orders.getDiscountPrice(form))));
             });
         });
 

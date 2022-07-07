@@ -1,8 +1,9 @@
 package com.kodius.order.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.immutables.value.Value;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Value.Immutable
@@ -11,7 +12,8 @@ public interface OrderFormModel {
     Optional<String> model();
     Optional<Integer> year();
     Optional<Integer> mileage();
-    Optional<Instant> date();
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    Optional<LocalDate> date();
     @Value.Default
     default boolean changeChain() {
         return false;

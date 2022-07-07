@@ -26,7 +26,7 @@ public class OrderService {
         this.db = db;
     }
 
-    public Optional<Double> getDiscountPrice(OrderForm dto) {
+    public Optional<Integer> getDiscountPrice(OrderForm dto) {
         if (findPricing(dto).isEmpty()) {
             return Optional.empty();
         }
@@ -43,11 +43,11 @@ public class OrderService {
         else if (dto.changeChain() && dto.changeBrakeFluid()) {
             basePrice *= 0.85;
         }
-        return Optional.of(basePrice);
+        return Optional.of((int) basePrice);
     }
 
     public Optional<Pricing> findPricing(OrderForm dto) {
-        /* Dynamic constraint validation in service layer */
+        /* Dynamic filtering for service layer validation */
         return db.withHandle(h -> {
             var query = new StringBuilder("SELECT * FROM service_pricing WHERE TRUE ");
             var params = new HashMap<String, Object>();
@@ -63,15 +63,17 @@ public class OrderService {
                 query.append("AND last_supported_year <= :year ");
                 params.put("year", year);
             });
-            return h.createQuery(query.toString())
+            System.out.println(query);
+            var pricings = h.createQuery(query.toString())
                 .bindMap(params)
                 .mapTo(Pricing.class)
-                .findOne();
+                .list();
+            return pricings.size() == 1 ? Optional.of(pricings.get(0)) : Optional.empty();
         });
     }
 
     public List<Order> getOrdersForUser(Integer userId) {
-        return db.withExtension(OrderDAO.class, dao -> dao.listOrdersForUser(userId));
+        return db.withExtension(OrderDao.class, dao -> dao.listOrdersForUser(userId));
     }
 
     public List<MotorcycleService> getAvailableServices() {
@@ -100,7 +102,7 @@ public class OrderService {
             throw new BadRequestResponse();
         }
 
-        return db.withExtension(OrderDAO.class, dao ->
+        return db.withExtension(OrderDao.class, dao ->
             dao.placeOrder(userId,
                            dto.date().get(),
                            dto.model().get(),
