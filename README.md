@@ -13,7 +13,7 @@ mvn exec:java
     - Sloj pristupa bazi podataka (Data Access Layer, JDBI knjižnica za jednostavnije SQL upite i mapiranje podataka)
     - Baza podataka - Postgres + pgAdmin4 GUI u docker compose-u
 
-## JSR-330 kompatibilan DI kontejner:
+## Dependency Injection kontejner:
 - Google Guice
 
 ## Pretprocesor anotacija
