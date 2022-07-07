@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderDao {
 
-    @SqlQuery("SELECT * FROM service_order WHERE owner_id = ?")
+    @SqlQuery("SELECT * FROM service_order WHERE owner_id = ? ORDER BY service_date")
     List<Order> listOrdersForUser(@Bind Integer userId);
 
     @SqlQuery("INSERT INTO service_order(owner_id, service_date, model, mileage) VALUES (:owner_id, :service_date, :model, :mileage) RETURNING *")

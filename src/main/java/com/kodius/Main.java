@@ -62,7 +62,7 @@ public class Main {
             return LocalDate.parse(v, fmt);
         });
 
-        /* REST handlers */
+        /* REST handlers (Controller layer, generally should be in separate classes) */
         app.before(ctx -> {
             String url = ctx.path();
             if (url.startsWith("/public/")) {
@@ -136,7 +136,7 @@ public class Main {
             ctx.redirect("/orders");
         });
 
-        /* websocket endpoint for handling live updates for computing form price with */
+        /* WebSocket endpoint for handling live updates for computing form price with */
         app.ws("/compute-price", ws -> {
             ws.onMessage(ctx -> {
                 var orders = di.getInstance(OrderService.class);
@@ -145,7 +145,10 @@ public class Main {
                 System.out.println(form);
                 var maybePricing = orders.findPricing(form);
                 maybePricing.ifPresent(System.out::println);
-                maybePricing.ifPresent(pricing -> ctx.send(Map.of("base", maybePricing, "discounted", orders.getDiscountPrice(form))));
+                maybePricing.ifPresent(pricing -> ctx.send(
+                    Map.of("base", maybePricing,
+                           "discounted", orders.getDiscountPrice(form))
+                ));
             });
         });
 
