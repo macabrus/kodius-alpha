@@ -8,7 +8,9 @@ function debounce(func, timeout = 300){
 
 const ws = new WebSocket('ws://localhost:7000/compute-price')
 ws.onmessage = function (event) {
-    console.log("Message received..." + event.data);
+    const result = JSON.parse(event.data);
+    console.log("Message received...", result);
+    document.querySelector('span#total-price').textContent = `$${result.discounted / 100}`;
 };
 
 async function updatePrice(e) {

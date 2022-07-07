@@ -27,10 +27,26 @@ public class OrderService {
     }
 
     public Optional<Integer> getDiscountPrice(OrderForm dto) {
-        if (findPricing(dto).isEmpty()) {
+        var maybePricing = findPricing(dto);
+        if (maybePricing.isEmpty()) {
             return Optional.empty();
         }
-        var basePrice = findPricing(dto).get().total() / 100.;
+        var pricing = maybePricing.get();
+        var basePrice = 0.;
+        /* Add all services */
+        if (dto.changeChain()) {
+            basePrice += pricing.chainChangePrice();
+        }
+        if (dto.changeOilAndOilFilter()) {
+            basePrice += pricing.oilAndOilFilterChangePrice();
+        }
+        if (dto.changeAirFilter()) {
+            basePrice += pricing.airFilterChangePrice();
+        }
+        if (dto.changeBrakeFluid()) {
+            basePrice += pricing.brakeFluidChangePrice();
+        }
+        /* Discounts */
         if (dto.fullService()) {
             basePrice -= 40 / USD_EUR;
         }

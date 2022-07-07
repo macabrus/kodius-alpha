@@ -45,7 +45,8 @@
 </form>
 {% endblock %}
 {% block right %}
-    <img src="/public/orders_list_img.png">
+    <h2>Order Summary</h2>
+    <h3>Price with discounts: <span id="total-price"></span></h3>
 {% endblock %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
