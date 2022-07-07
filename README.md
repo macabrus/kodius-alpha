@@ -16,7 +16,7 @@ mvn run
 ## JSR-330 kompatibilan DI kontejner:
 - Google Guice
 
-## Pre-procesor anotacija
+## Pretprocesor anotacija
 - Immutables za reduciranje boilerplatea
 
 _Napomena: korištena Java 17_
