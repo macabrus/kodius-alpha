@@ -1,7 +1,7 @@
 ## Pokretanje projekta
 ```bash
 docker-compose -f postgres_dockercompose.yaml up -d
-mvn run
+mvn exec:java
 ```
 
 ## Dijelovi rješenja
