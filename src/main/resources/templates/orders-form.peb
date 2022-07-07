@@ -1,4 +1,10 @@
 {% extends "./orders-base.peb" %}
+
+{% block css %}
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
+{% endblock %}
+
 {% block left %}
 <p>new order form </p>
 <form action="/orders" method="POST">
@@ -19,9 +25,12 @@
     {% endfor %}
 </select>
 
+<label for="year">Model Year:</label>
 <input name="year" placeholder="Enter year...">
+<label for="mileage">Mileage:</label>
 <input name="mileage" placeholder="Enter Mileage...">
-<input name="mileage" placeholder="Choose Date"> <br>
+<label for="date">Choose Date:</label>
+<input name="date" placeholder="Choose Date"> <br>
 
 <input type="checkbox" id="changeChain" name="changeChain" value="true">
 <label for="changeChain">Chain Change</label><br>
@@ -38,3 +47,12 @@
 {% block right %}
     <img src="/public/orders_list_img.png">
 {% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
+<script>
+    const elem = document.querySelector('input[name="date"]');
+    const datepicker = new Datepicker(elem);
+</script>
+{% endblock %}
+
+<script></script>

@@ -47,6 +47,7 @@ public class OrderService {
     }
 
     public Optional<Pricing> findPricing(OrderForm dto) {
+        /* Dynamic constraint validation in service layer */
         return db.withHandle(h -> {
             var query = new StringBuilder("SELECT * FROM service_pricing WHERE TRUE ");
             var params = new HashMap<String, Object>();
@@ -59,7 +60,7 @@ public class OrderService {
                 params.put("model", model);
             });
             dto.year().ifPresent(year -> {
-                query.append("AND year <= :year ");
+                query.append("AND last_supported_year <= :year ");
                 params.put("year", year);
             });
             return h.createQuery(query.toString())
@@ -93,32 +94,17 @@ public class OrderService {
             .collect(Collectors.toSet());
     }
 
-    public void placeOrder(OrderForm dto) {
+    public Order placeOrder(Integer userId, OrderForm dto) {
         var pricing = findPricing(dto);
         if (pricing.isEmpty()) {
             throw new BadRequestResponse();
         }
-        db.useExtension(OrderDAO.class, dao ->
-            dao.placeOrder(dto.date().get(),
+
+        return db.withExtension(OrderDAO.class, dao ->
+            dao.placeOrder(userId,
+                           dto.date().get(),
                            dto.model().get(),
                            dto.mileage().get())
         );
-        Order.builder();
-        /* Dynamic constraint validation in service layer */
-        db.withHandle(h -> {
-            boolean isValidBrand = h.createQuery("SELECT COUNT(*) FROM service_pricing WHERE brand = ?")
-                .bind(0, dto.brand())
-                .mapTo(Integer.class)
-                .findOne()
-                .map(o -> o.compareTo(0) > 0)
-                .orElse(false);
-            boolean isValidModel = h.createQuery("SELECT COUNT(*) FROM service_pricing WHERE model = ?")
-                .bind(0, dto.brand())
-                .mapTo(Integer.class)
-                .findOne()
-                .map(o -> o.compareTo(0) > 0)
-                .orElse(false);
-            boolean
-        })
     }
 }

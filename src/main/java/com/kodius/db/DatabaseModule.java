@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provides;
-import com.kodius.order.model.MotorcycleService;
-import com.kodius.order.model.MotorcycleServiceModel;
-import com.kodius.order.model.Order;
-import com.kodius.order.model.OrderModel;
+import com.google.inject.Singleton;
+import com.kodius.order.model.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jdbi.v3.core.Jdbi;
@@ -21,12 +19,12 @@ import javax.sql.DataSource;
 
 public class DatabaseModule implements Module {
 
-    @Provides
+    @Provides @Singleton
     public DataSource dataSource(HikariConfig config) {
         return new HikariDataSource(config);
     }
 
-    @Provides
+    @Provides @Singleton
     public Jdbi jdbi(DataSource ds, ObjectMapper mapper) {
         /* Configure JDBI interface for simpler DB access */
         var jdbi = Jdbi.create(ds)
@@ -36,12 +34,13 @@ public class DatabaseModule implements Module {
             .setMapper(mapper);
         jdbi.getConfig(JdbiImmutables.class)
             .registerImmutable(OrderModel.class, Order.class, Order::builder)
+            .registerImmutable(PricingModel.class, Pricing.class, Pricing::builder)
             .registerImmutable(MotorcycleServiceModel.class, MotorcycleService.class, MotorcycleService::builder);
         jdbi.setSqlLogger(new Slf4JSqlLogger());
         return jdbi;
     }
 
-    @Provides
+    @Provides @Singleton
     public HikariConfig hikariConfig() {
         /* Configure JDBC driver and connection pooling */
         var config = new HikariConfig();

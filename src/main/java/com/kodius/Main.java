@@ -10,12 +10,18 @@ import com.kodius.order.OrderService;
 import com.kodius.order.model.OrderForm;
 import com.kodius.user.UserDAO;
 import io.javalin.Javalin;
+import io.javalin.core.validation.JavalinValidation;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.json.JavalinJackson;
 import org.jdbi.v3.core.Jdbi;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.Map;
 
 public class Main {
@@ -38,6 +44,14 @@ public class Main {
                 conf.directory = "/public";
                 conf.location = Location.CLASSPATH;
             });
+        });
+        JavalinValidation.register(Instant.class, v -> {
+            DateTimeFormatter fmt = new DateTimeFormatterBuilder()
+                .appendPattern("MM/dd/yyyy")
+                .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
+                .toFormatter()
+                .withZone(ZoneId.systemDefault());
+            return fmt.parse(v, Instant::from);
         });
 
         app.before(ctx -> {
@@ -94,6 +108,7 @@ public class Main {
                 .model(ctx.formParamAsClass("model", String.class).get())
                 .year(ctx.formParamAsClass("year", Integer.class).get())
                 .mileage(ctx.formParamAsClass("mileage", Integer.class).get())
+                .date(ctx.formParamAsClass("date", Instant.class).get())
                 .changeChain(ctx.formParamAsClass("changeChain", Boolean.class).getOrDefault(false))
                 .changeOilAndOilFilter(ctx.formParamAsClass("changeOilAndOilFilter", Boolean.class).getOrDefault(false))
                 .changeAirFilter(ctx.formParamAsClass("changeAirFilter", Boolean.class).getOrDefault(false))
@@ -101,10 +116,19 @@ public class Main {
                 .build();
             System.out.println(dto);
             var orders = di.getInstance(OrderService.class);
-            orders.placeOrder(dto);
+            orders.placeOrder(ctx.sessionAttribute("userId"), dto);
 
             // put flash message to thank for order...
             ctx.redirect("/orders");
+        });
+
+        // handle live updates for computing form price
+        app.ws("/compute-price", ws -> {
+            ws.onMessage(ctx -> {
+                var orders = di.getInstance(OrderService.class);
+                var maybePricing = orders.findPricing(ctx.messageAsClass(OrderForm.class));
+                maybePricing.ifPresent(pricing -> ctx.send(maybePricing));
+            });
         });
 
         app.start(7000);

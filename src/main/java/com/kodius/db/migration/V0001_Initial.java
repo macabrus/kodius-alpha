@@ -26,7 +26,6 @@ public class V0001_Initial implements Migration {
         db.execute(createModelTable());
 
         addUsers(db);
-        db.execute("INSERT INTO service_order(owner_id, service_date, model, mileage, progress) VALUES (1, '2021-12-12', 'Kawasaki', 450, 'FINISHED')");
         addPricingsData(db);
     }
 
@@ -56,7 +55,7 @@ public class V0001_Initial implements Migration {
                 service_date TIMESTAMP,
                 model TEXT,
                 mileage INT,
-                progress TEXT,
+                progress TEXT DEFAULT 'Pending',
                 FOREIGN KEY(owner_id) REFERENCES app_user(id) ON DELETE CASCADE
             );
             """;

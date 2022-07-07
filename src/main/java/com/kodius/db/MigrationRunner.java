@@ -30,7 +30,7 @@ public class MigrationRunner {
     public static void main(String[] args) throws Exception {
         Jdbi db = Jdbi.create("jdbc:postgresql://postgres:5432/kodius","kodius", "kodius");
         MigrationRunner runner = new MigrationRunner(db);
-        runner.migrate(Strategy.RESET_TO_LATEST);
+        runner.migrate(Strategy.LATEST);
     }
 
     private void ensureMigrationTable(Handle h) {
